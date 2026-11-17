@@ -126,9 +126,9 @@ JaCoCo branch coverage нь нөхцөл бүрийн T/F салаа гүйцэ�
 
 | Мутаци | Тестийн хүлээгдэх үр дүн | Шалтгаан |
 |---|---|---|
-| M1 — 41-р мөрийн `streak = streak + 1`-ийг устгах | `allDefs_02...`, `duPairs_06...`, `duPairs_08...` унах ёстой | 5 дараалсан ирцийн streak өсөхгүй, bonus +3 олгогдохгүй; expected 8, actual 5 болно. |
-| M2 — 43-р мөрийн `best = streak`-ийг `best = present` болгох | `duPairs_07...` унах ёстой | `[1,1,0,1,1,0,1,1,1]` үед present=7, best streak=3. Сүүлийн streak 3 болох үед `3 > өмнөх best 2` тул мутацийн `best = present` нь best=7 болгож буруу +3 оноо өгнө. Зөв оноо 5, мутацийн оноо 8. |
-| M3 — давталтын дараа ашиглагдахгүй `int total = present + best;` нэмэх | JUnit тестүүд унахгүй | Dead definition нь гаралтад нөлөөлөхгүй. IDE/static analysis-ийн unused local variable анхааруулга илрүүлэх ёстой; `javac` заавал алдаа өгөхгүй. |
+| M1 — 41-р мөрийн `streak = streak + 1`-ийг устгах | `allDefs_02...`, `duPairs_06...`, `duPairs_08...` унах ёстой | Manual runner: `allDefs_02` expected 8, was 5; `duPairs_06` expected 8, was 5; `duPairs_08` expected 3, was 0. |
+| M2 — 43-р мөрийн `best = streak`-ийг `best = present` болгох | `duPairs_07...` унах ёстой | `[1,1,0,1,1,0,1,1,1]` үед present=7, best streak=3. Сүүлийн streak 3 болох үед `3 > өмнөх best 2` тул мутацийн `best = present` нь best=7 болгож буруу +3 оноо өгнө. Manual runner: expected 5, was 8. |
+| M3 — давталтын дараа ашиглагдахгүй `int total = present + best;` нэмэх | Тестүүд унахгүй | Manual runner: 13 тест, 0 failure. Dead definition нь гаралтад нөлөөлөхгүй. IDE/static analysis-ийн unused local variable анхааруулга илрүүлэх ёстой; `javac` заавал алдаа өгөхгүй. |
 
 Энэ тестийн багцад M2 амьд үлдэхгүй: `duPairs_07_total_present_exceeds_best_streak_kills_wrong_best_update` нь нийт ирц ба хамгийн урт дараалсан streak өөр байгааг зориуд сонгосон тул буруу хувьсагчийн хэрэглээг илрүүлнэ. M3-ийн IDE анхааруулгын яг текстийг ашигласан IDE-ээсээ хуулж хавсаргах шаардлагатай.
 
