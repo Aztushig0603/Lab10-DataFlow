@@ -1,7 +1,7 @@
 digraph bonus_cfg {
-  graph [rankdir=TB, splines=ortho, nodesep=0.35, ranksep=0.5, fontname="Arial", labelloc="t", label="CFG — DataFlowTargets.bonus()", fontsize=18];
-  node [shape=box, style="rounded", fontname="Arial", fontsize=10, margin="0.12,0.08"];
-  edge [fontname="Arial", fontsize=8, arrowsize=0.7];
+  graph [rankdir=TB, splines=polyline, nodesep=0.45, ranksep=0.62, fontname="Arial", labelloc="t", label="CFG — DataFlowTargets.bonus()", fontsize=18];
+  node [shape=box, style="rounded", fontname="Arial", fontsize=9, margin="0.12,0.08"];
+  edge [fontname="Arial", fontsize=6, arrowsize=0.65];
   entry [shape=oval,label="Entry"];
   check [label="32: attendance == null || threshold < 0?"];
   bad [label="throw IllegalArgumentException"];
@@ -19,25 +19,23 @@ digraph bonus_cfg {
   scoreplus [label="54: score = score + 3"];
   ret [label="56: return score",shape=oval];
   entry -> check;
-  check -> bad [label="T: duPairs_10, duPairs_11"];
-  check -> init [label="F: allDefs_01"];
+  check -> bad [label="T: duPairs_10_null_attendance_throws; duPairs_11_negative_threshold_throws"];
+  check -> init [label="F: allDefs_01_reset_streak_and_score_zero_definition"];
   init -> loop;
-  loop -> acheck [label="T: allDefs_01, allDefs_02"];
-  loop -> score0 [label="F: duPairs_03 (empty)"];
-  acheck -> inc [label="T: allDefs_01, allDefs_02"];
-  acheck -> reset [label="F: allDefs_01, duPairs_04"];
+  loop -> acheck [label="T: allDefs_01_reset_streak_and_score_zero_definition; allDefs_02_five_consecutive_days_score_five_then_eight"];
+  loop -> score0 [label="F: duPairs_03_empty_array_threshold_zero_present_true_best_false"];
+  acheck -> inc [label="T: allDefs_01_reset_streak_and_score_zero_definition; allDefs_02_five_consecutive_days_score_five_then_eight"];
+  acheck -> reset [label="F: allDefs_01_reset_streak_and_score_zero_definition; duPairs_04_all_absent_threshold_positive_present_false"];
   inc -> bestcheck;
-  bestcheck -> update [label="T: allDefs_02"];
-  bestcheck -> loop [label="F: duPairs_09", minlen=2];
-  update -> loop [label="next item: allDefs_02"];
-  reset -> loop [label="next item: allDefs_01, duPairs_06"];
+  bestcheck -> update [label="T: allDefs_02_five_consecutive_days_score_five_then_eight"];
+  bestcheck -> loop [label="F: duPairs_09_streak_comparison_false_after_shorter_streak", minlen=2];
+  update -> loop [label="next: allDefs_02_five_consecutive_days_score_five_then_eight; duPairs_07_total_present_exceeds_best_streak_kills_wrong_best_update"];
+  reset -> loop [label="next: allDefs_01_reset_streak_and_score_zero_definition; duPairs_06_streak_five_after_reset_kills_old_streak_definition"];
   score0 -> presentcheck;
-  presentcheck -> score5 [label="T: duPairs_03, duPairs_05"];
-  presentcheck -> best5 [label="F: allDefs_01, duPairs_08"];
+  presentcheck -> score5 [label="T: duPairs_03_empty_array_threshold_zero_present_true_best_false; duPairs_05_exact_present_threshold_and_short_streak"];
+  presentcheck -> best5 [label="F: allDefs_01_reset_streak_and_score_zero_definition; duPairs_08_best_streak_five_but_present_below_threshold_score_three"];
   score5 -> best5;
-  best5 -> scoreplus [label="T: allDefs_02, duPairs_08"];
-  best5 -> ret [label="F: duPairs_05"];
+  best5 -> scoreplus [label="T: allDefs_02_five_consecutive_days_score_five_then_eight; duPairs_08_best_streak_five_but_present_below_threshold_score_three"];
+  best5 -> ret [label="F: duPairs_05_exact_present_threshold_and_short_streak"];
   scoreplus -> ret;
-  {rank=same; inc; reset}
-  {rank=same; update; bestcheck}
 }

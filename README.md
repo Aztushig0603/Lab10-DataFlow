@@ -126,7 +126,7 @@ JaCoCo branch coverage нь нөхцөл бүрийн T/F салаа гүйцэ�
 
 | Мутаци | Тестийн хүлээгдэх үр дүн | Шалтгаан |
 |---|---|---|
-| M1 — 41-р мөрийн `streak = streak + 1`-ийг устгах | `allDefs_02...` болон `duPairs_06...` унах ёстой | 5 дараалсан ирцийн streak өсөхгүй, bonus +3 олгогдохгүй; expected 8, actual 5 болно. |
+| M1 — 41-р мөрийн `streak = streak + 1`-ийг устгах | `allDefs_02...`, `duPairs_06...`, `duPairs_08...` унах ёстой | 5 дараалсан ирцийн streak өсөхгүй, bonus +3 олгогдохгүй; expected 8, actual 5 болно. |
 | M2 — 43-р мөрийн `best = streak`-ийг `best = present` болгох | `duPairs_07...` унах ёстой | `[1,1,0,1,1,0,1,1,1]` үед present=7, best streak=3. Сүүлийн streak 3 болох үед `3 > өмнөх best 2` тул мутацийн `best = present` нь best=7 болгож буруу +3 оноо өгнө. Зөв оноо 5, мутацийн оноо 8. |
 | M3 — давталтын дараа ашиглагдахгүй `int total = present + best;` нэмэх | JUnit тестүүд унахгүй | Dead definition нь гаралтад нөлөөлөхгүй. IDE/static analysis-ийн unused local variable анхааруулга илрүүлэх ёстой; `javac` заавал алдаа өгөхгүй. |
 
@@ -167,7 +167,7 @@ PowerShell дээр `tee`-ийн оронд UTF-8 хадгалахдаа `mvn ve
 
 ## Дүгнэлт (6–8 өгүүлбэр)
 
-DU анализ нь branch coverage-ээс илүү нарийн түвшинд хувьсагчийн тодорхойлолт ба хэрэглээний холбоог шалгадаг. Branch coverage 100% болсон ч тодорхой def-ээс тодорхой use хүртэлх def-clear зам тестлэгдээгүй үлдэж болно. All-defs нь def бүрийг дор хаяж нэг use-д хүргэдэг боловч бүх DU хосыг хамруулахгүй. All-DU-pairs нь илүү бүрэн шалгалт өгдөг ч CFG байгуулах, def/use цэгүүдийг ялгах, kill-ээр тасарсан замыг шинжлэхэд их цаг шаарддаг. Fault seeding нь тестийн багц зориуд тарьсан бодит гажилтыг илрүүлж чадаж байгаа эсэхийг шалгана. M1 нь streak update-ийг алга болгосон тул үр дүнгийн тестээр баригдана. M2 нь нийт ирц ба хамгийн урт streak-ийг андуурсан тул ялгаатай утгатай өгөгдөл шаарддаг. M3 нь үр дүнд нөлөөлөхгүй dead definition учраас IDE/static analysis-аар илрүүлэх ёстой.
+DU анализ нь branch coverage-ээс илүү нарийн түвшинд хувьсагчийн тодорхойлолт ба хэрэглээний холбоог шалгадаг. Branch coverage 100% болсон ч тодорхой def-ээс тодорхой use хүртэлх def-clear зам тестлэгдээгүй үлдэж болно. All-defs нь def бүрийг дор хаяж нэг use-д хүргэдэг боловч бүх DU хосыг хамруулахгүй. All-DU-pairs нь илүү бүрэн шалгалт өгдөг ч CFG байгуулах, def/use цэгүүдийг ялгах, kill-ээр тасарсан замыг шинжлэхэд их цаг шаарддаг. Fault seeding нь тестийн багц зориуд тарьсан бодит гажилтыг илрүүлж чадаж байгаа эсэхийг шалгана. M1 нь streak update-ийг алга болгосон тул `allDefs_02`, `duPairs_06`, `duPairs_08` тестээр баригдана. M2 нь нийт ирц ба хамгийн урт streak-ийг андуурсан тул ялгаатай утгатай өгөгдөл шаарддаг. M3 нь үр дүнд нөлөөлөхгүй dead definition учраас IDE/static analysis-аар илрүүлэх ёстой.
 
 ## AI туслах ашигласан тухай
 
@@ -175,4 +175,4 @@ AI туслахыг starter кодыг уншиж DU шинжилгээний х
 
 ## Бэлтгэл орчинд бодитоор ажиллуулсан шалгалт
 
-`results/manual-javac-check.txt` — starter production class-ийг `javac`-аар compile хийж, 11 үндсэн жишээний expected/actual утгыг Java harness-аар шалгасан гаралт. `results/manual-mutation-check.txt` — M1, M2, M3-ийг түр өөрчилж `javac/java`-аар үр нөлөөг шалгасан гаралт. Эдгээр нь JUnit/Surefire/JaCoCo-ийн үр дүн биш. Maven суулгагдаагүй тул шаардлагатай Maven лог болон JaCoCo CSV-үүдийг өөрийн Maven орчинд `run-lab.sh` болон дээрх all-defs командуудаар үүсгэж нэмэх шаардлагатай.
+`results/manual-javac-check.txt` — starter production class-ийг `javac`-аар compile хийж, 11 үндсэн жишээний expected/actual утгыг Java harness-аар шалгасан гаралт. `results/manual-mutation-check.txt` — M1, M2, M3-ийг түр өөрчилж `javac/java`-аар үр нөлөөг шалгасан гаралт. `results/manual-test-runner.txt` болон `results/manual-mutation-test-runner.txt` нь түр JUnit API stub ашиглан тестийн эх кодыг ажиллуулсан шалгалт; албан ёсны JUnit/Surefire/JaCoCo-ийн үр дүн биш. Maven суулгагдаагүй тул шаардлагатай Maven лог болон JaCoCo CSV-үүдийг өөрийн Maven орчинд `run-alldefs.sh`, `run-lab.sh` скриптээр үүсгэж нэмэх шаардлагатай.
