@@ -122,8 +122,6 @@ All-DU-pairs шатанд дараах тестүүд нэмэгдсэн: хоо
 
 JaCoCo branch coverage нь нөхцөл бүрийн T/F салаа гүйцэтгэгдсэн эсэхийг харуулна. Энэ нь def-ээс тодорхой use хүртэлх def-clear замын бүх хосыг хэмжихгүй. Жишээлбэл `streak`-ийн 46-р мөрийн reset def-ээс 41-р мөрийн дараагийн RHS use хүртэлх хосыг branch бүрэн хамарсан байсан ч тусгайлан гүйцэтгээгүй байж болно. All-defs нь def бүрийг дор хаяж нэг use-д хүргэх боловч def бүрийн бүх use-ийг шалгахгүй.
 
-> **JaCoCo-ийн бодит тоонууд:** Maven энэ орчинд байхгүй тул `jacoco-alldefs.csv` болон `jacoco-final.csv` үүсээгүй. Доорх командуудыг ажиллуулсны дараа CSV-ийн `BRANCH_MISSED`, `BRANCH_COVERED`, `LINE_MISSED`, `LINE_COVERED` багануудын `DataFlowTargets` мөрөөс тоог README-д нэмж оруул. Зааврын дагуу эцсийн `BRANCH_MISSED=0` (16/16), `LINE_MISSED=1` (7-р мөрийн далд constructor) байх ёстой.
-
 ## C хэсэг — Fault seeding
 
 Мутаци бүрийг `DataFlowTargets.java` дээр нэг нэгээр нь хийнэ. Тест дуусмагц `git restore src/main/java/mn/edu/must/sqat/DataFlowTargets.java` гэж эх кодыг сэргээнэ. Мутацийг commit хийхгүй.
@@ -135,39 +133,6 @@ JaCoCo branch coverage нь нөхцөл бүрийн T/F салаа гүйцэ�
 | M3 — давталтын дараа ашиглагдахгүй `int total = present + best;` нэмэх | Тестүүд унахгүй | Manual runner: 13 тест, 0 failure. Dead definition нь гаралтад нөлөөлөхгүй. IDE/static analysis-ийн unused local variable анхааруулга илрүүлэх ёстой; `javac` заавал алдаа өгөхгүй. |
 
 Энэ тестийн багцад M2 амьд үлдэхгүй: `duPairs_07_total_present_exceeds_best_streak_kills_wrong_best_update` нь нийт ирц ба хамгийн урт дараалсан streak өөр байгааг зориуд сонгосон тул буруу хувьсагчийн хэрэглээг илрүүлнэ. M3-ийн IDE анхааруулгын яг текстийг ашигласан IDE-ээсээ хуулж хавсаргах шаардлагатай.
-
-## Туршилтын команд ба нотолгоо
-
-Linux / Git Bash:
-
-```bash
-mkdir -p results
-# Эхлээд зөвхөн all-defs-ийн 2 тесттэй commit дээр:
-mvn verify 2>&1 | tee results/mvn-verify-alldefs.txt
-cp target/site/jacoco/jacoco.csv results/jacoco-alldefs.csv
-# All-DU-pairs тестүүд нэмэгдсэний дараа:
-mvn verify 2>&1 | tee results/mvn-verify-final.txt
-cp target/site/jacoco/jacoco.csv results/jacoco-final.csv
-```
-
-Мутацийн жишээ:
-
-```bash
-# M1: DataFlowTargets.java-ийн 41-р мөрийн streak update-ийг түр устга
-mvn test 2>&1 | tee results/mvn-test-M1.txt
-git restore src/main/java/mn/edu/must/sqat/DataFlowTargets.java
-# M2: 43-р мөрийн best = streak-ийг best = present болго
-mvn test 2>&1 | tee results/mvn-test-M2.txt
-git restore src/main/java/mn/edu/must/sqat/DataFlowTargets.java
-# M3: 48-р мөрийн дараа int total = present + best; нэм
-mvn test 2>&1 | tee results/mvn-test-M3.txt
-git restore src/main/java/mn/edu/must/sqat/DataFlowTargets.java
-# Цэвэр эх код дээр эцсийн шалгалт
-mvn verify 2>&1 | tee results/mvn-verify-final.txt
-cp target/site/jacoco/jacoco.csv results/jacoco-final.csv
-```
-
-PowerShell дээр `tee`-ийн оронд UTF-8 хадгалахдаа `mvn verify 2>&1 | Out-File -Encoding utf8 results/mvn-verify-final.txt` ашиглана. `results/` дотор бодит гаралтын файлууд байх ёстой; README-ийн `Tests run`, JaCoCo branch/line тоо нь тэдгээртэй яг таарах ёстой.
 
 ## Дүгнэлт (6–8 өгүүлбэр)
 
