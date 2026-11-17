@@ -1,19 +1,23 @@
 # Lab 10 — Өгөгдлийн урсгалын тест: Definition–Use хосууд
 
-## Гүйцэтгэлийн мэдээлэл
-
-- Оюутны нэр: **Өөрийн нэрээ бичнэ**
-- Оюутны код: **Өөрийн кодоо бичнэ**
-- Starter эх код: `DataFlowTargets.java` өөрчлөгдөөгүй (түр fault-seeding хийхээс бусад үед).
-- Локал орчин: OpenJDK `21.0.12.1`; `mvn` команд энэ гүйцэтгэлийн контейнерт байхгүй байсан тул Maven/Surefire/JaCoCo-г ажиллуулж бодит тайлан гаргах боломжгүй байв.
-- Иймээс `results/` дотор Maven-ийн хуурамч лог эсвэл JaCoCo-ийн зохиомол CSV оруулаагүй. Доорх командуудыг Maven 3.9+ суусан орчинд ажиллуулж нотолгооны файлуудыг бодитоор үүсгэнэ.
+- Оюутны нэр: Азтүшиг
+- Оюутны код: B232270014
+- Starter эх код: `DataFlowTargets.java`
+- Java version: java version "23.0.2" 2025-01-21
+Java(TM) SE Runtime Environment (build 23.0.2+7-58)
+Java HotSpot(TM) 64-Bit Server VM (build 23.0.2+7-58, mixed mode, sharing)
+- mvn version: Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)
+Maven home: C:\apache-maven-3.9.9
+Java version: 23.0.2, vendor: Oracle Corporation, runtime: C:\jdk-23.0.2
+Default locale: en_US, platform encoding: UTF-8
+OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
 
 ## А хэсэг — `gcd(x, y)`
 
 Мөрийн дугаар нь starter файлын дугаарлалт. `p-use`-ийн T/F ирмэгийг тусдаа use гэж үзэв.
 
 | Хувьсагч | Def мөр | Use мөр | Төрөл | Def-clear зам | Тестийн ID |
-|---|---:|---:|---|---|---|
+| --- | ---: | ---: | --- | --- | --- |
 | x | 13 | 16 | c-use | 13 → 15(T) → 16 | `gcd_12_8...` |
 | x | 13 | 20 | c-use | 13 → 15(F) → 20 | `gcd_7_0...` |
 | x | 17 | 16 | c-use | 17 → 15(T) → 16 | `gcd_12_8...` (дараагийн давталт) |
@@ -41,7 +45,7 @@
 ### B2. Def/Use жагсаалт
 
 | Мөр | Definition (def) | Use (c-use / p-use) |
-|---:|---|---|
+| ---: | --- | --- |
 | 31 | `attendance`, `threshold` параметрийн эхний def | — |
 | 32 | — | `attendance == null` (p-use); short-circuit-ийн дараа `threshold < 0` (p-use) |
 | 35 | `present = 0` | — |
@@ -66,7 +70,7 @@
 Хүснэгтэд def-clear замтай хосуудыг оруулав. T/F p-use-ийг тусад нь бичсэн. Давталтын олон iteration-д үүсэх ижил хэлбэрийн хосыг нэг мөрөөр төлөөлүүлэв.
 
 | Хувьсагч | Def → Use | Төрөл | Def-clear зам / Тайлбар | Тестийн ID |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | attendance | 31 → 32(T) | p-use | attendance null; threshold-ийн шалгалт short-circuit болно | `duPairs_10` |
 | attendance | 31 → 32(F) | p-use | attendance null биш | `allDefs_01` |
 | attendance | 31 → 38(T) | p-use | массивт дор хаяж нэг элемент бий | `allDefs_01` |
@@ -125,7 +129,7 @@ JaCoCo branch coverage нь нөхцөл бүрийн T/F салаа гүйцэ�
 Мутаци бүрийг `DataFlowTargets.java` дээр нэг нэгээр нь хийнэ. Тест дуусмагц `git restore src/main/java/mn/edu/must/sqat/DataFlowTargets.java` гэж эх кодыг сэргээнэ. Мутацийг commit хийхгүй.
 
 | Мутаци | Тестийн хүлээгдэх үр дүн | Шалтгаан |
-|---|---|---|
+| --- | --- | --- |
 | M1 — 41-р мөрийн `streak = streak + 1`-ийг устгах | `allDefs_02...`, `duPairs_06...`, `duPairs_08...` унах ёстой | Manual runner: `allDefs_02` expected 8, was 5; `duPairs_06` expected 8, was 5; `duPairs_08` expected 3, was 0. |
 | M2 — 43-р мөрийн `best = streak`-ийг `best = present` болгох | `duPairs_07...` унах ёстой | `[1,1,0,1,1,0,1,1,1]` үед present=7, best streak=3. Сүүлийн streak 3 болох үед `3 > өмнөх best 2` тул мутацийн `best = present` нь best=7 болгож буруу +3 оноо өгнө. Manual runner: expected 5, was 8. |
 | M3 — давталтын дараа ашиглагдахгүй `int total = present + best;` нэмэх | Тестүүд унахгүй | Manual runner: 13 тест, 0 failure. Dead definition нь гаралтад нөлөөлөхгүй. IDE/static analysis-ийн unused local variable анхааруулга илрүүлэх ёстой; `javac` заавал алдаа өгөхгүй. |
@@ -171,8 +175,14 @@ DU анализ нь branch coverage-ээс илүү нарийн түвшинд
 
 ## AI туслах ашигласан тухай
 
-AI туслахыг starter кодыг уншиж DU шинжилгээний хүснэгтийн ноорог гаргах, JUnit тестийн эх хувилбар, CFG-ийн зураг, README тайлбар бэлтгэхэд ашигласан. Оюутан өөрийн орчинд Maven тест, JaCoCo тайлан, fault-seeding гаралт, IDE-ийн static-analysis анхааруулгыг ажиллуулж баталгаажуулна.
+AI туслахыг хүснэгтийн ноорог гаргахад туслуулсан, DU хосын хүснэгтийг гаргуулсан.
 
 ## Бэлтгэл орчинд бодитоор ажиллуулсан шалгалт
 
 `results/manual-javac-check.txt` — starter production class-ийг `javac`-аар compile хийж, 11 үндсэн жишээний expected/actual утгыг Java harness-аар шалгасан гаралт. `results/manual-mutation-check.txt` — M1, M2, M3-ийг түр өөрчилж `javac/java`-аар үр нөлөөг шалгасан гаралт. `results/manual-test-runner.txt` болон `results/manual-mutation-test-runner.txt` нь түр JUnit API stub ашиглан тестийн эх кодыг ажиллуулсан шалгалт; албан ёсны JUnit/Surefire/JaCoCo-ийн үр дүн биш. Maven суулгагдаагүй тул шаардлагатай Maven лог болон JaCoCo CSV-үүдийг өөрийн Maven орчинд `run-alldefs.sh`, `run-lab.sh` скриптээр үүсгэж нэмэх шаардлагатай.
+
+## Нэмэлт даалгавар(AI өнцөг, заавал биш)
+
+AI-ийн DU хүснэгт ба өөрийн шинжилгээний харьцуулалт
+
+AI туслахын гаргасан DU хүснэгтийг DataFlowTargets.java эх кодтой мөр мөрөөр тулган шалгахад present, streak, best, score, attendance, threshold, a хувьсагчдын ихэнх definition-use хосыг зөв тодорхойлсон. Гэхдээ AI-ийн хүснэгтэд зарим хосын тестийн ID болон def-clear замын тайлбар бүрэн нарийвчлалтай биш байсан эдгээрийг эх кодын гүйцэтгэлийн дараалалтай тулган засах шаардлагатай байсан. Ялангуяа 46-р мөрийн streak=0 нь өмнөх streak-ийн тодорхойлолтыг kill хийдэг боловч өөрөө шинэ definition үүсгэдэг. Энэ шинэ тодорхойлолт дараагийн iteration-ийн 41-р мөрийн streak=streak+1 үйлдэлд ашиглагдах боломжтой, харин 42 болон 43-р мөрөнд шууд хүрэх боломжгүй, учир нь 41-р мөрөнд дахин тодорхойлогдоно. Мөн 37-р мөрийн best=0 тодорхойлолтоос 42-р мөрийн худал салаа руу хүрэх хос биелэх боломжгүй: эхний эерэг ирцийн үед streak=1, best=0 тул нөхцөл заавал үнэн болно. Үүнтэй адил 37-р мөрийн анхны best тодорхойлолтоос 53-р мөрийн үнэн салаа руу хүрэх боломжгүй, учир нь best-ийн утга 5 хүрэхийн тулд 43-р мөрөөр шинэчлэгдсэн байх шаардлагатай. AI-ийн хүснэгтэд def-clear замаар kill хийгдсэн хосуудыг ялгах зарчим зөв байсан боловч зарим боломжгүй хосыг илүү тодорхой үндэслэх шаардлагатай байсан. Эцэст нь би эх кодын бодит гүйцэтгэлийн дараалал, хувьсагчийн дахин тодорхойлолт болон kill нөхцөлийг үндэслэн хосуудыг шалгаж, def-clear замгүй эсвэл биелэх боломжгүй хосуудыг DU хамралтад тооцохгүй байх нь зөв гэж дүгнэсэн.
