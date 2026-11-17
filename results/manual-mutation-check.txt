@@ -1,0 +1,4 @@
+Manual mutation sanity check (javac/java only; NOT Maven/JUnit/JaCoCo)
+M1 streak5 expected=8 actual=5
+M2 total7_max3 expected=5 actual=8
+M3 unchanged behavior expected=8 actual=8
