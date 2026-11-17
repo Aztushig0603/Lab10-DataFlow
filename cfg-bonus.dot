@@ -1,0 +1,43 @@
+digraph bonus_cfg {
+  graph [rankdir=TB, splines=ortho, nodesep=0.35, ranksep=0.5, fontname="Arial", labelloc="t", label="CFG — DataFlowTargets.bonus()", fontsize=18];
+  node [shape=box, style="rounded", fontname="Arial", fontsize=10, margin="0.12,0.08"];
+  edge [fontname="Arial", fontsize=8, arrowsize=0.7];
+  entry [shape=oval,label="Entry"];
+  check [label="32: attendance == null || threshold < 0?"];
+  bad [label="throw IllegalArgumentException"];
+  init [label="35: present=0\n36: streak=0\n37: best=0"];
+  loop [label="38: attendance-д дараагийн элемент байна уу?\nT: a-д дараагийн элементийг оноох (a def)\nF: давталт дуусах"];
+  acheck [label="39: a > 0 ?"];
+  inc [label="40: present = present + 1\n41: streak = streak + 1"];
+  bestcheck [label="42: streak > best ?"];
+  update [label="43: best = streak"];
+  reset [label="46: streak = 0"];
+  score0 [label="49: score = 0"];
+  presentcheck [label="50: present >= threshold ?"];
+  score5 [label="51: score = 5"];
+  best5 [label="53: best >= 5 ?"];
+  scoreplus [label="54: score = score + 3"];
+  ret [label="56: return score",shape=oval];
+  entry -> check;
+  check -> bad [label="T: duPairs_10, duPairs_11"];
+  check -> init [label="F: allDefs_01"];
+  init -> loop;
+  loop -> acheck [label="T: allDefs_01, allDefs_02"];
+  loop -> score0 [label="F: duPairs_03 (empty)"];
+  acheck -> inc [label="T: allDefs_01, allDefs_02"];
+  acheck -> reset [label="F: allDefs_01, duPairs_04"];
+  inc -> bestcheck;
+  bestcheck -> update [label="T: allDefs_02"];
+  bestcheck -> loop [label="F: duPairs_09", minlen=2];
+  update -> loop [label="next item: allDefs_02"];
+  reset -> loop [label="next item: allDefs_01, duPairs_06"];
+  score0 -> presentcheck;
+  presentcheck -> score5 [label="T: duPairs_03, duPairs_05"];
+  presentcheck -> best5 [label="F: allDefs_01, duPairs_08"];
+  score5 -> best5;
+  best5 -> scoreplus [label="T: allDefs_02, duPairs_08"];
+  best5 -> ret [label="F: duPairs_05"];
+  scoreplus -> ret;
+  {rank=same; inc; reset}
+  {rank=same; update; bestcheck}
+}
